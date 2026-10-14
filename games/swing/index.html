@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>The Swing</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,6 +39,12 @@
   #rotate p { margin: 0; max-width: 300px; }
   #rotate .sub { color: #8a8578; font-size: 9px; margin-top: 14px; }
   @keyframes turn { 0%, 30% { transform: rotate(0); border-color: #6fa8ff; } 60%, 100% { transform: rotate(-90deg); border-color: #ffc857; } }
+  /* if the page ever gets zoomed in anyway, let a pinch zoom it back out */
+  #zoomhint { display: none; position: fixed; left: 50%; top: 8px; transform: translateX(-50%); z-index: 6;
+    background: #10121c; color: #ffc857; border: 2px solid #ffc857; border-radius: 6px; padding: 8px 12px;
+    font: 10px/1.6 "Press Start 2P", monospace; text-align: center; pointer-events: none; }
+  html.zoomed #zoomhint { display: block; }
+  html.zoomed, html.zoomed * { touch-action: pinch-zoom !important; }
   #inset { position: absolute; visibility: hidden; pointer-events: none;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
 </style>
@@ -59,6 +65,7 @@
 </div>
 <div id="rotate"><div class="phone"></div><p>Please turn your device sideways to play.</p><p class="sub">The Swing plays in landscape.</p></div>
 <div id="inset"></div>
+<div id="zoomhint">Pinch with two fingers to zoom back out</div>
 <script>
 /* =====================================================================
    THE SWING — a cooperative Dual Process Model game (1 or 2 players)
@@ -264,6 +271,20 @@ cv.addEventListener('pointerdown', e => {
   tap = { x: (e.clientX - r.left) / r.width * W, y: (e.clientY - r.top) / r.height * H };
 });
 addEventListener('contextmenu', e => { if (touchMode) e.preventDefault(); });
+/* stop the browser from zooming when buttons are tapped quickly (double-tap zoom) or pinched */
+const isZoomed = () => !!(window.visualViewport && visualViewport.scale > 1.02);
+document.addEventListener('touchstart', e => { if (!isZoomed() && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+document.addEventListener('touchend', e => { if (!isZoomed()) e.preventDefault(); }, { passive: false });
+document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
+['gesturestart', 'gesturechange'].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), { passive: false }));
+const zoomHint = document.getElementById('zoomhint');
+function checkZoom() {
+  const z = isZoomed(); document.documentElement.classList.toggle('zoomed', z);
+  if (z) { const v = visualViewport;   /* keep the hint in the part of the page you can see */
+    Object.assign(zoomHint.style, { left: (v.offsetLeft + v.width / 2) + 'px', top: (v.offsetTop + 8 / v.scale) + 'px',
+      transform: 'translateX(-50%) scale(' + (1 / v.scale) + ')', transformOrigin: 'top center' }); }
+}
+if (window.visualViewport) { visualViewport.addEventListener('resize', checkZoom); visualViewport.addEventListener('scroll', checkZoom); }
 const inBox = (p, x, y, w, h) => p && p.x >= x && p.x <= x + w && p.y >= y && p.y <= y + h;
 
 const padPrev = {};
