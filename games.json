@@ -1,0 +1,13 @@
+[
+  {
+    "slug": "swing",
+    "title": "The Swing",
+    "description": "Keep a griever swinging between grief and daily life through the first year after a loss.",
+    "players": "1–2 players (co-op)",
+    "concept": "Dual Process Model (Stroebe & Schut, 1999)",
+    "path": "games/swing/",
+    "thumb": "games/swing/thumb.png",
+    "accent": "both",
+    "added": "2026-10-14"
+  }
+]
