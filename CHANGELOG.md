@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-14
+- Launch page: updated the AI disclaimer in the footer to note that, despite review, AI-assisted content may contain errors, and to ask readers to check important information against course readings or other reliable sources.
 - Added **Technique Draw** (`games/grief-techniques/`) for Week 6. Students read a bilingual case (雅婷 and 志宏, a couple grieving their son), then press **Draw** to get one of 30 grief-therapy technique cards at random (repeats possible, as many draws as they like). Each card shows the full description, who it is for, steps and case example in Chinese and English, a tap-to-choose **Leans toward: LO / RO / Oscillation** with a short 8-bit sound, and the prompt “How would you adapt this technique for Ya-ting and Chih-hung?” Language switch: 中 / 雙語 / EN. Phones get Case and Technique tabs with a Draw bar at the bottom; wide screens show both side by side. Keyboard: Space = draw, 1/2/3 = leans toward. Three discussion questions under the case.
 - Case adapted from Hooghe (2022), *The handbook of grief therapies*, ch. 24 (names, places and details changed); each technique card cites its chapter in Neimeyer (Ed., 2016), *Techniques of grief therapy*.
 - **Term Duel:** added a second topic, **Models of Grief** (Week 6, 10 terms): grief-work hypothesis, stage models, task model, attachment theory, meaning-making, Dual Process Model, LO and RO coping, oscillation, continuing bonds. Chinese terms checked against Taiwanese sources. Direct link: `games/term-duel/#grief-models`.
