@@ -31,5 +31,16 @@
     "thumb": "games/line-charades/thumb.png",
     "accent": "neutral",
     "added": "2026-10-14"
+  },
+  {
+    "slug": "term-duel",
+    "title": "Term Duel",
+    "description": "Rock-paper-scissors your way around the room: win and name a term, lose and explain it. Tick off every term on your own phone.",
+    "players": "Whole class, one phone each",
+    "concept": "Advance Care Planning vocabulary (Patient Right to Autonomy Act)",
+    "path": "games/term-duel/",
+    "thumb": "games/term-duel/thumb.png",
+    "accent": "neutral",
+    "added": "2026-10-14"
   }
 ]
