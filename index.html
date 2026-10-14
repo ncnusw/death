@@ -51,11 +51,6 @@
   .rule span:nth-child(1) { background: var(--lo); } .rule span:nth-child(2) { background: var(--lo-dark); }
   .rule span:nth-child(3) { background: var(--ro-dark); } .rule span:nth-child(4) { background: var(--ro); }
   .intro { margin: 0 auto; max-width: 56ch; font-size: clamp(15px, 2vw, 18px); text-wrap: pretty; }
-  .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; margin-top: 16px;
-    font: 10px/1.6 var(--pixel); }
-  .legend span { display: inline-flex; align-items: center; gap: 8px; }
-  .legend span::before { content: ""; width: 12px; height: 12px; background: currentColor; box-shadow: 2px 2px 0 #000; }
-  .legend .lo { color: var(--lo); } .legend .ro { color: var(--ro); }
 
   /* ---------- game cards ---------- */
   main { flex: 1; padding: 8px var(--gutter) 48px; }
@@ -108,7 +103,6 @@
   @media (max-width: 520px) {
     body { font-size: 16px; }
     .scene { height: 44px; }
-    .legend { font-size: 9px; }
     .body { padding: 18px 16px 20px; }
     .meta li { flex-direction: column; gap: 2px; }
   }
@@ -140,10 +134,6 @@
   <div class="rule" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
   <p class="intro">Classroom games and activities for exploring how people live with loss.
     Pick a game below. Each one ends with questions for discussion.</p>
-  <div class="legend">
-    <span class="lo">Loss-Oriented</span>
-    <span class="ro">Restoration-Oriented</span>
-  </div>
 </header>
 
 <main>
@@ -195,7 +185,7 @@
     "title": "Ageism Quiz",
     "description": "Ten questions on how ageism shapes grief and end-of-life care. Show your score screen to the class.",
     "players": "1 player, on your own phone",
-    "concept": "Ageism and disenfranchised grief (Week 5)",
+    "concept": "Ageism and disenfranchised grief",
     "path": "games/ageism-quiz/",
     "thumb": "games/ageism-quiz/thumb.png",
     "accent": "neutral",
