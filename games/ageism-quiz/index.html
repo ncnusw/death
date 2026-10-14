@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ageism Quiz</title>
+<meta name="description" content="A 10-question quiz on ageism, grief and end-of-life care.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07080d; --panel: #0e1019; --panel2: #141726; --line: #2a2d40;
+    --lo: #6fa8ff; --ro: #ffc857; --cream: #f1ecdf; --mut: #a39d8f;
+    --right: #3ddc6a; --wrong: #ff5d5d;
+    --pixel: "Press Start 2P", ui-monospace, monospace;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --gutter: max(16px, env(safe-area-inset-left));
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: var(--bg); color: var(--cream); font: 18px/1.5 var(--body);
+    -webkit-tap-highlight-color: transparent; transition: background-color .4s; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  [hidden] { display: none !important; }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: max(18px, env(safe-area-inset-top)) var(--gutter) max(28px, env(safe-area-inset-bottom));
+    min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+
+  /* ---------- shared bits ---------- */
+  .pixel { font-family: var(--pixel); }
+  .btn { font: 14px/1.4 var(--pixel); background: var(--cream); color: var(--bg); border: 0;
+    padding: 18px 22px 16px; min-height: 56px; box-shadow: 5px 5px 0 #000; border-radius: 2px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
+  .btn:active { transform: translate(4px, 4px); box-shadow: 1px 1px 0 #000; }
+  .btn:focus-visible, .btn.pad-focus { outline: 4px solid var(--ro); outline-offset: 3px; }
+  .rule { display: flex; height: 6px; max-width: 240px; margin: 18px auto; }
+  .rule span { flex: 1; }
+  .rule span:nth-child(1) { background: var(--lo); } .rule span:nth-child(2) { background: #1f3a6b; }
+  .rule span:nth-child(3) { background: #6b4a12; } .rule span:nth-child(4) { background: var(--ro); }
+
+  /* ---------- title screen ---------- */
+  #title { flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; gap: 6px; }
+  #title h1 { font: clamp(24px, 6.5vw, 44px)/1.4 var(--pixel); margin: 0; text-shadow: 4px 4px 0 #000; }
+  #title .sub { color: var(--mut); margin: 0 auto; max-width: 34ch; text-wrap: balance; }
+  #title .how { margin: 22px auto 26px; padding: 16px 18px; background: var(--panel); border: 3px solid var(--line);
+    max-width: 480px; text-align: left; font-size: 16px; display: grid; gap: 10px; box-shadow: 5px 5px 0 #000; }
+  #title .how div { display: grid; grid-template-columns: 96px 1fr; gap: 10px; align-items: baseline; }
+  #title .how b { font: 9px/1.9 var(--pixel); color: var(--ro); }
+  #title .btn { align-self: center; font-size: 16px; padding: 20px 34px 18px; }
+
+  /* ---------- question screen ---------- */
+  #quiz { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+  .top { display: flex; justify-content: space-between; align-items: center; font: 11px/1.6 var(--pixel); color: var(--mut); gap: 12px; }
+  .top .score { color: var(--right); }
+  .bar { display: flex; gap: 4px; }
+  .bar i { flex: 1; height: 10px; background: var(--panel2); border: 2px solid var(--line); }
+  .bar i.done-right { background: var(--right); border-color: var(--right); }
+  .bar i.done-wrong { background: var(--wrong); border-color: var(--wrong); }
+  .bar i.now { border-color: var(--cream); }
+  #q { font-size: clamp(20px, 4.6vw, 26px); line-height: 1.4; font-weight: 600; margin: 8px 0 4px; text-wrap: pretty; }
+  #opts { display: grid; gap: 12px; }
+  .opt { display: flex; gap: 14px; align-items: center; text-align: left; width: 100%; min-height: 64px;
+    padding: 14px 16px; background: var(--panel); border: 3px solid var(--line); border-radius: 4px;
+    box-shadow: 4px 4px 0 #000; font-size: clamp(16px, 3.8vw, 19px); line-height: 1.35; }
+  .opt .key { flex: 0 0 auto; width: 38px; height: 38px; display: grid; place-items: center;
+    font: 13px var(--pixel); background: var(--panel2); border: 2px solid var(--line); }
+  .opt:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: 1px 1px 0 #000; }
+  .opt:focus-visible, .opt.pad-focus { border-color: var(--ro); outline: none; }
+  @media (hover: hover) { .opt:hover:not(:disabled) { border-color: #4a4e68; } }
+  .opt:disabled { cursor: default; }
+  .opt.right { border-color: var(--right); background: rgba(61,220,106,.16); }
+  .opt.right .key { background: var(--right); border-color: var(--right); color: #000; }
+  .opt.wrong { border-color: var(--wrong); background: rgba(255,93,93,.16); }
+  .opt.wrong .key { background: var(--wrong); border-color: var(--wrong); color: #000; }
+  .opt.dim { opacity: .45; }
+  #fb { border-left: 6px solid var(--right); background: var(--panel); padding: 14px 16px; font-size: 17px; }
+  #fb.no { border-left-color: var(--wrong); }
+  #fb .verdict { font: 12px/1.6 var(--pixel); margin-bottom: 6px; }
+  #fb .verdict.ok { color: var(--right); } #fb .verdict.no { color: var(--wrong); }
+  #fb p { margin: 0; }
+  #next { align-self: flex-end; }
+  .keys { margin-top: auto; padding-top: 8px; text-align: center; font-size: 13px; color: var(--mut); }
+  .keys b { font: 8px var(--pixel); color: var(--cream); margin: 0 4px 0 10px; }
+  @media (pointer: coarse) { .keys { display: none; } }
+
+  /* ---------- result screen: big, bright, readable from the back of the room ---------- */
+  #result { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px; color: #000; }
+  #result .label { font: clamp(14px, 3.6vw, 22px)/1.5 var(--pixel); margin: 0; }
+  #result .big { font: clamp(48px, 17vw, 170px)/1.1 var(--pixel); margin: 12px 0 4px; white-space: nowrap; }
+  #result .pct { font: clamp(26px, 8vw, 54px)/1.2 var(--pixel); margin: 0 0 6px; }
+  #result .msg { font-size: clamp(18px, 4.5vw, 24px); font-weight: 700; margin: 6px 0 18px; max-width: 26ch; text-wrap: balance; }
+  #again { background: #000; color: #fff; font-size: 16px; padding: 22px 34px 20px; box-shadow: 5px 5px 0 rgba(0,0,0,.35); }
+  #again:focus-visible, #again.pad-focus { outline-color: #fff; }
+  #result .discuss { margin-top: 26px; background: rgba(0,0,0,.78); color: var(--cream); padding: 16px 18px;
+    max-width: 560px; text-align: left; font-size: 16px; border-radius: 4px; }
+  #result .discuss h2 { font: 10px/1.6 var(--pixel); color: var(--ro); margin: 0 0 8px; }
+  #result .discuss ol { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
+
+  body.res-yellow { background: #ffd400; }
+  body.res-green  { background: #22e05a; }
+  body.res-rainbow { background: #ff4d4d; animation: rainbow 3s linear infinite; }
+  body.res-rainbow #result { color: #fff; text-shadow: 3px 3px 0 #000; }
+  body.res-rainbow #result .discuss { text-shadow: none; }
+  /* smooth colour cycle, slow enough to be safe for photosensitive viewers (no strobing) */
+  @keyframes rainbow {
+    0% { background: #ff4d4d; } 16% { background: #ff9f1c; } 33% { background: #f5d300; }
+    50% { background: #2ecc40; } 66% { background: #1e90ff; } 83% { background: #8e44ff; } 100% { background: #ff4d4d; } }
+  @media (prefers-reduced-motion: reduce) {
+    body.res-rainbow { animation: none; background: linear-gradient(135deg, #ff4d4d, #ff9f1c, #f5d300, #2ecc40, #1e90ff, #8e44ff); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== TITLE ===== -->
+  <section id="title">
+    <h1>AGEISM<br>QUIZ</h1>
+    <div class="rule" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <p class="sub">10 questions on ageism, grief and end-of-life care.</p>
+    <div class="how">
+      <div><b>TOUCH</b>Tap an answer, then tap Next</div>
+      <div><b>KEYBOARD</b>1–4 to answer, Enter for Next</div>
+      <div><b>8BITDO</b>D-pad to move, any face button to choose</div>
+    </div>
+    <button class="btn" id="start" type="button">START ▶</button>
+  </section>
+
+  <!-- ===== QUESTION ===== -->
+  <section id="quiz" hidden>
+    <div class="top"><span id="count">QUESTION 1 / 10</span><span class="score" id="live">SCORE 0</span></div>
+    <div class="bar" id="bar" aria-hidden="true"></div>
+    <h2 id="q"></h2>
+    <div id="opts" role="group" aria-label="Answers"></div>
+    <div id="fb" hidden aria-live="polite"><div class="verdict"></div><p></p></div>
+    <button class="btn" id="next" type="button" hidden>NEXT ▶</button>
+    <div class="keys"><b>1–4</b>answer<b>ENTER</b>next<b>8BITDO</b>D-pad + face button</div>
+  </section>
+
+  <!-- ===== RESULT ===== -->
+  <section id="result" hidden>
+    <p class="label">YOUR SCORE</p>
+    <p class="big" id="big">0/10</p>
+    <p class="pct" id="pct">0%</p>
+    <p class="msg" id="msg"></p>
+    <button class="btn" id="again" type="button">TRY AGAIN</button>
+    <div class="discuss">
+      <h2>DISCUSS</h2>
+      <ol>
+        <li>Which answer surprised you most? Why did you first believe something else?</li>
+        <li>Think of an older person you know. Where might their grief go unnoticed?</li>
+        <li>As a social worker, what could you say instead of "She had a long life"?</li>
+      </ol>
+    </div>
+  </section>
+</div>
+
+<script>
+/* Questions: paraphrased from Week 5 course content. The first option listed is the one we check against,
+   but every question's answers are shuffled before display. */
+const QUESTIONS = [
+  { q: "Ageism has three parts: how we think, feel, and act toward people because of age. Which set matches those parts?",
+    a: ["Stereotypes, prejudice, discrimination", "Memory, emotion, behaviour", "Respect, duty, care", "Denial, anger, acceptance"],
+    why: "Thinking is stereotypes, feeling is prejudice, and acting is discrimination." },
+  { q: "A hospital policy quietly gives older patients fewer palliative-care referrals. Which level of ageism is this?",
+    a: ["Institutional", "Self-directed", "Interpersonal", "Cultural taste"],
+    why: "Institutional ageism lives in rules, policies and systems, not in one person's words." },
+  { q: "An 80-year-old says, “I'm just a burden now. Don't waste treatment on me.” Which level of ageism is this?",
+    a: ["Self-directed", "Institutional", "Interpersonal", "None. It is simply realistic."],
+    why: "Older people can absorb society's age stereotypes and turn them on themselves." },
+  { q: "Grief follows attachment. Which statement discounts the grief OF an older person?",
+    a: ["“She's used to losing people at her age.”", "“She was married to him for 60 years.”", "“She may need extra support right now.”", "“Let's ask her how she is coping.”"],
+    why: "Assuming older people “get used to” loss denies that their attachments still matter." },
+  { q: "At a very old person's funeral, visitors call it a “happy funeral” because the person lived a long, full life. What risk did we discuss?",
+    a: ["The family's grief may go unrecognised", "It always insults the person who died", "It is illegal in Taiwan", "It makes the funeral too expensive"],
+    why: "Honouring a long life is fine. The risk is that it can tell the living they have no right to grieve. This is called disenfranchised grief." },
+  { q: "A family tells the doctor, “Don't tell Grandma she is dying. She's too old to handle it.” What is the main concern from this week?",
+    a: ["An assumption about age can override the patient's own right to know and say goodbye", "Families should never be involved in care", "Doctors must always tell the family first", "Older patients never want to know"],
+    why: "This decision often comes from love and filial duty. It can still take away the dying person's chance to make their own choices and keep their bonds." },
+  { q: "“Disenfranchised grief” means grief that…",
+    a: ["is not openly recognised or supported by others", "lasts longer than one year", "is expressed only through rituals", "only happens after a sudden death"],
+    why: "Doka: grief is disenfranchised when the relationship, the loss, or the griever is not recognised." },
+  { q: "Is it true that “East Asian societies are simply less ageist than Western ones”?",
+    a: ["Not so simple. Showing respect or duty is not the same as personally valuing or liking older people.", "Yes. Filial piety prevents ageism.", "Yes. Ageism is only a Western idea.", "No. East Asia has no respect for elders at all."],
+    why: "Respect at the level of society can sit alongside negative personal attitudes." },
+  { q: "Older people are often seen as “warm but not competent,” which leads to pity. Pity often leads people to…",
+    a: ["take over decisions and talk down to them, for example with “baby talk”", "treat older adults as equals", "avoid helping them at all", "ask for their advice more often"],
+    why: "Pity licenses paternalism. Elderspeak and deciding “for their own good” are examples." },
+  { q: "Which approach has the best evidence for reducing ageism?",
+    a: ["Combining education about ageing with real contact between generations", "Wearing an “ageing suit” to feel what it is like to be old", "Avoiding the topic of ageing completely", "Telling jokes about getting old"],
+    why: "Simulating decline can make attitudes worse. Learning together with real relationships works best." }
+];
+const GREEN_AT = 0.7;   // 70% or more = green; 100% = rainbow; below 70% = yellow
+
+const $ = id => document.getElementById(id);
+const screens = { title: $('title'), quiz: $('quiz'), result: $('result') };
+let deck = [], i = 0, score = 0, answered = false, results = [];
+
+function shuffle(arr) { const a = arr.slice(); for (let k = a.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [a[k], a[j]] = [a[j], a[k]]; } return a; }
+function show(name) {
+  for (const k in screens) screens[k].hidden = k !== name;
+  document.body.className = '';
+  window.scrollTo(0, 0);
+  padIdx = -1; clearPad();
+}
+
+function start() {
+  deck = shuffle(QUESTIONS).map(item => ({
+    q: item.q, why: item.why,
+    opts: shuffle(item.a.map((text, n) => ({ text, ok: n === 0 })))
+  }));
+  i = 0; score = 0; results = [];
+  show('quiz'); render();
+}
+
+function render() {
+  const item = deck[i];
+  answered = false;
+  $('count').textContent = `QUESTION ${i + 1} / ${deck.length}`;
+  $('live').textContent = `SCORE ${score}`;
+  $('bar').innerHTML = deck.map((_, n) =>
+    `<i class="${n < i ? (results[n] ? 'done-right' : 'done-wrong') : n === i ? 'now' : ''}"></i>`).join('');
+  $('q').textContent = item.q;
+  const box = $('opts'); box.innerHTML = '';
+  item.opts.forEach((o, n) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'opt';
+    b.innerHTML = `<span class="key">${'ABCD'[n]}</span><span></span>`;
+    b.lastChild.textContent = o.text;
+    b.addEventListener('click', () => choose(n));
+    box.appendChild(b);
+  });
+  $('fb').hidden = true; $('next').hidden = true;
+  window.scrollTo(0, 0);
+}
+
+function choose(n) {
+  if (answered) return;
+  answered = true;
+  const item = deck[i], ok = item.opts[n].ok;
+  if (ok) score++;
+  results[i] = ok;
+  [...$('opts').children].forEach((b, k) => {
+    b.disabled = true;
+    if (item.opts[k].ok) b.classList.add('right');
+    else if (k === n) b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+  const fb = $('fb');
+  fb.className = ok ? '' : 'no';
+  fb.querySelector('.verdict').className = 'verdict ' + (ok ? 'ok' : 'no');
+  fb.querySelector('.verdict').textContent = ok ? 'CORRECT!' : 'NOT QUITE.';
+  fb.querySelector('p').textContent = item.why;
+  fb.hidden = false;
+  $('live').textContent = `SCORE ${score}`;
+  $('next').textContent = i + 1 < deck.length ? 'NEXT ▶' : 'SEE MY SCORE ▶';
+  $('next').hidden = false;
+  clearPad(); padIdx = -1;
+  $('next').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
+function next() {
+  if (!answered) return;
+  i++;
+  if (i < deck.length) render(); else finish();
+}
+
+function finish() {
+  show('result');
+  const total = deck.length, ratio = score / total;
+  $('big').textContent = `${score}/${total}`;
+  $('pct').textContent = `${Math.round(ratio * 100)}%`;
+  let cls, msg;
+  if (score === total) { cls = 'res-rainbow'; msg = 'Perfect score!'; }
+  else if (ratio >= GREEN_AT) { cls = 'res-green'; msg = 'Well done!'; }
+  else { cls = 'res-yellow'; msg = 'Good effort. Try again to learn more.'; }
+  document.body.className = cls;
+  $('msg').textContent = msg;
+}
+
+$('start').addEventListener('click', start);
+$('next').addEventListener('click', next);
+$('again').addEventListener('click', start);
+
+/* ---------- keyboard: 1–4 answer, Enter/Space next ---------- */
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (!screens.quiz.hidden) {
+    const n = '1234'.indexOf(e.key);
+    if (n >= 0 && !answered) { e.preventDefault(); choose(n); return; }
+    if ((e.key === 'Enter' || e.key === ' ') && answered) { e.preventDefault(); next(); }
+  }
+});
+
+/* ---------- 8BitDo / gamepad: D-pad, stick or shoulders move; any face button chooses ---------- */
+let padIdx = -1, prevPad = {};
+function targets() {
+  if (!screens.title.hidden) return [$('start')];
+  if (!screens.result.hidden) return [$('again')];
+  return answered ? [$('next')] : [...$('opts').children];
+}
+function clearPad() { document.querySelectorAll('.pad-focus').forEach(el => el.classList.remove('pad-focus')); }
+function padMove(d) {
+  const list = targets(); if (!list.length) return;
+  padIdx = padIdx < 0 ? (d > 0 ? 0 : list.length - 1) : (padIdx + d + list.length) % list.length;
+  clearPad(); list[padIdx].classList.add('pad-focus');
+  list[padIdx].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+function padGo() {
+  const list = targets(); if (!list.length) return;
+  if (list.length === 1) { list[0].click(); return; }
+  if (padIdx < 0) { padMove(1); return; }   // first press highlights, second press chooses
+  list[padIdx].click();
+}
+function pollPads() {
+  const pads = navigator.getGamepads ? [...navigator.getGamepads()].filter(Boolean) : [];
+  for (const gp of pads) {
+    const b = j => !!(gp.buttons[j] && (gp.buttons[j].pressed || gp.buttons[j].value > 0.5));
+    const ax = gp.axes[0] || 0, ay = gp.axes[1] || 0;
+    const now = {
+      down: b(13) || b(15) || b(5) || b(7) || ay > 0.6 || ax > 0.6,
+      up: b(12) || b(14) || b(4) || b(6) || ay < -0.6 || ax < -0.6,
+      go: b(0) || b(1) || b(2) || b(3) || b(9)
+    };
+    const p = prevPad[gp.index] || {};
+    if (now.down && !p.down) padMove(1);
+    if (now.up && !p.up) padMove(-1);
+    if (now.go && !p.go) padGo();
+    prevPad[gp.index] = now;
+  }
+  requestAnimationFrame(pollPads);
+}
+document.addEventListener('pointerdown', clearPad);
+requestAnimationFrame(pollPads);
+</script>
+</body>
+</html>

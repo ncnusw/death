@@ -67,6 +67,7 @@
     box-shadow: 6px 6px 0 #000; transition: transform .12s, box-shadow .12s, border-color .12s; min-height: 100%;
     position: relative; outline: none; }
   .card.lo { --b: var(--lo); } .card.ro { --a: var(--ro); }
+  .card.neutral { --a: var(--cream); --b: var(--mut); }
   .card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6px; z-index: 1;
     background: linear-gradient(90deg, var(--a) 0 50%, var(--b) 50% 100%); }
   .card:active { transform: translate(4px, 4px); box-shadow: 2px 2px 0 #000; }
@@ -188,6 +189,17 @@
     "thumb": "games/swing/thumb.png",
     "accent": "both",
     "added": "2026-10-14"
+  },
+  {
+    "slug": "ageism-quiz",
+    "title": "Ageism Quiz",
+    "description": "Ten questions on how ageism shapes grief and end-of-life care. Show your score screen to the class.",
+    "players": "1 player, on your own phone",
+    "concept": "Ageism and disenfranchised grief (Week 5)",
+    "path": "games/ageism-quiz/",
+    "thumb": "games/ageism-quiz/thumb.png",
+    "accent": "neutral",
+    "added": "2026-10-14"
   }
 ]
 </script>
@@ -212,7 +224,7 @@ function render(games) {
   if (!games.length) { grid.innerHTML = '<p class="status">No games yet.</p>'; return; }
   for (const gm of games) {
     const a = document.createElement('a');
-    a.className = 'card ' + (gm.accent === 'lo' || gm.accent === 'ro' ? gm.accent : 'both');
+    a.className = 'card ' + (['lo', 'ro', 'neutral'].includes(gm.accent) ? gm.accent : 'both');
     a.href = gm.path || `games/${gm.slug}/`;
     a.setAttribute('aria-label', `Play ${gm.title}: ${gm.description}`);
     a.innerHTML = `
