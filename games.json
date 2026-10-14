@@ -20,5 +20,16 @@
     "thumb": "games/ageism-quiz/thumb.png",
     "accent": "neutral",
     "added": "2026-10-14"
+  },
+  {
+    "slug": "line-charades",
+    "title": "Line Charades",
+    "description": "Two teams take turns acting out a secret line of Emily Dickinson's “Because I could not stop for Death —” while their guesser finds it in the poem.",
+    "players": "2 teams (classroom, one screen)",
+    "concept": "Close reading of poetry about death",
+    "path": "games/line-charades/",
+    "thumb": "games/line-charades/thumb.png",
+    "accent": "neutral",
+    "added": "2026-10-14"
   }
 ]

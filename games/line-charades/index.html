@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Line Charades</title>
+<meta name="description" content="Act out a line of Emily Dickinson's 'Because I could not stop for Death' while your team guesses it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07080d; --panel: #0e1019; --panel2: #141726; --line: #2a2d40;
+    --t1: #ff4f8f; --t2: #3fe0ff; --gold: #ffc857; --cream: #f1ecdf; --mut: #a39d8f;
+    --right: #3ddc6a; --wrong: #ff5d5d;
+    --pixel: "Press Start 2P", ui-monospace, monospace;
+    --serif: "EB Garamond", Georgia, "Times New Roman", serif;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --tc: var(--t1);
+  }
+  body.team2 { --tc: var(--t2); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--bg); color: var(--cream); font: 17px/1.5 var(--body); overflow: hidden;
+    -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  [hidden] { display: none !important; }
+
+  .app { position: fixed; inset: 0; display: flex; flex-direction: column; }
+
+  /* ---------- top bar ---------- */
+  .hud { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: max(10px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) 10px max(14px, env(safe-area-inset-left));
+    border-bottom: 3px solid var(--line); background: #0a0b12; font: 11px/1.6 var(--pixel); }
+  .chip { padding: 7px 10px 5px; border: 3px solid; background: var(--panel); white-space: nowrap; }
+  .chip.t1 { color: var(--t1); border-color: var(--t1); } .chip.t2 { color: var(--t2); border-color: var(--t2); }
+  .chip.on { box-shadow: 0 0 0 3px rgba(255,255,255,.15), 0 0 18px currentColor; }
+  #turnLbl { color: var(--cream); text-align: center; flex: 1; }
+  #turnLbl b { color: var(--tc); font-weight: normal; }
+  .hud .right { display: flex; gap: 8px; align-items: center; }
+  .icon { font: 10px var(--pixel); background: var(--panel2); border: 3px solid var(--line); padding: 7px 9px 5px; min-height: 36px; }
+
+  /* ---------- screens ---------- */
+  main { flex: 1; position: relative; min-height: 0; }
+  .screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 18px max(16px, env(safe-area-inset-left)); overflow: auto; }
+  .btn { font: 14px/1.4 var(--pixel); background: var(--cream); color: var(--bg); border: 0;
+    padding: 18px 26px 16px; min-height: 56px; box-shadow: 5px 5px 0 #000; }
+  .btn:active { transform: translate(4px, 4px); box-shadow: 1px 1px 0 #000; }
+  .btn:disabled { opacity: .35; cursor: default; transform: none; box-shadow: 5px 5px 0 #000; }
+  .btn.team { background: var(--tc); }
+  .pulse { animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .55; } }
+
+  /* title */
+  #title h1 { font: clamp(26px, 5.5vw, 56px)/1.35 var(--pixel); margin: 0 0 10px; text-shadow: 4px 4px 0 #000; }
+  #title h1 span:first-child { color: var(--t1); } #title h1 span:last-child { color: var(--t2); }
+  #title .poem-name { font: italic clamp(18px, 2.6vw, 26px)/1.4 var(--serif); margin: 0; }
+  #title .credit { color: var(--mut); font-size: clamp(12px, 1.4vw, 14px); margin: 6px auto 0; max-width: 60ch; }
+  #title .rules { margin: 20px auto 0; max-width: 760px; text-align: left; background: var(--panel); border: 3px solid var(--line);
+    padding: 14px 18px; box-shadow: 5px 5px 0 #000; font-size: clamp(15px, 1.7vw, 18px); }
+  #title .rules ol { margin: 0; padding-left: 22px; display: grid; gap: 4px; }
+  #title .rules b { color: var(--gold); }
+  .settings { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; margin: 16px 0 4px; font: 10px/1.6 var(--pixel); color: var(--gold); }
+  .settings label { display: inline-flex; align-items: center; gap: 10px; }
+  .settings select { font: 11px var(--pixel); color: var(--gold); background: var(--panel2); border: 3px solid var(--gold); padding: 8px 6px 6px; }
+  .join { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 20px; margin: 14px 0 18px; }
+  .slot { font: 10px/1.7 var(--pixel); border: 3px dashed; padding: 10px 14px 8px; min-width: 250px; }
+  .slot.t1 { color: var(--t1); } .slot.t2 { color: var(--t2); }
+  .slot.joined { border-style: solid; box-shadow: 0 0 16px currentColor; }
+
+  /* hide */
+  .big { font: clamp(22px, 4.6vw, 52px)/1.45 var(--pixel); margin: 0; text-shadow: 4px 4px 0 #000; }
+  .count { font: clamp(80px, 18vw, 200px)/1 var(--pixel); color: var(--gold); margin: 24px 0 10px; text-shadow: 6px 6px 0 #000; }
+  .sub { color: var(--mut); font-size: clamp(16px, 2vw, 22px); margin: 8px 0 0; }
+
+  /* reveal */
+  #reveal .who { font: clamp(13px, 2vw, 22px)/1.5 var(--pixel); color: var(--tc); margin: 0 0 18px; }
+  #reveal .stanza { font: italic clamp(18px, 2.6vw, 30px)/1.45 var(--serif); color: #6f6a60; margin: 0; }
+  #reveal .stanza .target { display: block; font-size: clamp(30px, 5.4vw, 66px); line-height: 1.2; color: #fff; font-style: italic;
+    margin: 14px 0; text-shadow: 0 0 26px var(--tc); }
+  #reveal .bar { width: min(560px, 80vw); height: 12px; background: var(--panel2); border: 3px solid var(--line); margin-top: 22px; }
+  #reveal .bar i { display: block; height: 100%; background: var(--tc); }
+
+  /* guess */
+  #guess { justify-content: flex-start; padding-top: 10px; padding-bottom: 10px; }
+  .gtop { width: 100%; max-width: 1400px; display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+  .gtop .who { font: clamp(10px, 1.3vw, 14px)/1.5 var(--pixel); color: var(--tc); white-space: nowrap; }
+  .timer { flex: 1; height: 16px; background: var(--panel2); border: 3px solid var(--line); }
+  .timer i { display: block; height: 100%; background: var(--tc); }
+  #tnum { font: clamp(18px, 2.4vw, 28px) var(--pixel); min-width: 3.2ch; text-align: right; }
+  #tnum.low { color: var(--wrong); animation: pulse .6s infinite; }
+  .poem { width: 100%; max-width: 1400px; flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px 16px; align-content: start; overflow: auto; padding: 2px; }
+  .st { background: var(--panel); border: 3px solid var(--line); padding: 4px 6px 6px; }
+  .st h3 { font: 8px/1.6 var(--pixel); color: var(--mut); margin: 2px 8px 4px; text-align: left; }
+  .ln { display: block; width: 100%; text-align: left; background: transparent; border: 3px solid transparent;
+    padding: 3px 8px; font: italic clamp(14px, min(1.65vw, 2.6vh), 25px)/1.3 var(--serif); color: var(--cream); border-radius: 2px; }
+  .ln:disabled { cursor: default; }
+  .ln.sel { border-color: var(--tc); background: color-mix(in srgb, var(--tc) 18%, transparent); color: #fff; }
+  .ln.right { border-color: var(--right); background: rgba(61,220,106,.2); color: #fff; }
+  .ln.wrong { border-color: var(--wrong); background: rgba(255,93,93,.2); }
+  @media (hover: hover) { .ln:not(:disabled):not(.sel):hover { border-color: #4a4e68; } }
+  .gbottom { width: 100%; max-width: 1400px; display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 10px; min-height: 60px; }
+  .verdict { font: clamp(12px, 1.6vw, 18px)/1.6 var(--pixel); text-align: left; }
+  .verdict.ok { color: var(--right); } .verdict.no { color: var(--wrong); }
+  .verdict small { display: block; font: italic clamp(16px, 1.6vw, 22px)/1.35 var(--serif); color: var(--cream); margin-top: 2px; }
+
+  /* final */
+  #final h2 { font: clamp(22px, 4vw, 44px)/1.4 var(--pixel); margin: 0 0 18px; }
+  #winner { font: clamp(26px, 5.5vw, 62px)/1.3 var(--pixel); margin: 0 0 16px; text-shadow: 4px 4px 0 #000; }
+  #finalScore { font: clamp(14px, 2.2vw, 24px)/1.6 var(--pixel); margin: 0 0 28px; }
+  #finalScore .a { color: var(--t1); } #finalScore .b { color: var(--t2); }
+
+  /* controls strip */
+  .keys { flex: 0 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 22px; padding: 8px 14px max(8px, env(safe-area-inset-bottom));
+    border-top: 3px solid var(--line); background: #0a0b12; font-size: 13px; color: var(--mut); }
+  .keys b { font: 8px var(--pixel); color: var(--cream); margin-right: 6px; }
+
+  /* pause */
+  #pause { position: fixed; inset: 0; z-index: 20; background: rgba(5,6,12,.86); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 22px; text-align: center; padding: 20px; }
+  #pause .big { color: var(--gold); }
+
+  @media (max-width: 760px) { .poem { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) {
+    .poem { grid-template-columns: 1fr; }
+    .hud { font-size: 9px; } .chip { padding: 5px 7px 3px; }
+    .keys { display: none; }
+    .gbottom { flex-direction: column; align-items: stretch; }
+    .gbottom .btn { width: 100%; }
+  }
+  @media (max-height: 640px) { .keys { display: none; } .gtop { margin-bottom: 6px; } .gbottom { margin-top: 6px; } }
+  @media (prefers-reduced-motion: reduce) { .pulse, #tnum.low { animation: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="hud">
+    <span class="chip t1" id="c1">TEAM 1 <b id="s1">0</b></span>
+    <span id="turnLbl">LINE CHARADES</span>
+    <span class="right">
+      <button class="icon" id="pauseBtn" type="button" aria-label="Pause" hidden>II</button>
+      <span class="chip t2" id="c2">TEAM 2 <b id="s2">0</b></span>
+    </span>
+  </header>
+
+  <main>
+    <!-- TITLE -->
+    <section class="screen" id="title">
+      <h1><span>LINE</span> <span>CHARADES</span></h1>
+      <p class="poem-name">“Because I could not stop for Death —”</p>
+      <p class="credit">Emily Dickinson, Fr479 (c. 1862). Text after R. W. Franklin, ed., <i>The Poems of Emily Dickinson</i> (Harvard University Press, 1998).</p>
+      <div class="rules">
+        <ol>
+          <li>Two teams take turns. <b>5 rounds</b>, one turn per team each round.</li>
+          <li>Guessers <b>close their eyes</b>. The acting team sees a <b>secret line</b> of the poem.</li>
+          <li>Act the line out, with <b>no words</b>. Your guesser picks the line from the whole poem.</li>
+          <li>The exact line scores <b>1 point</b>. A wrong line or time up scores 0.</li>
+        </ol>
+      </div>
+      <div class="settings">
+        <label>READING TIME <select id="readSel"><option value="5">5 s</option><option value="10" selected>10 s</option><option value="15">15 s</option><option value="20">20 s</option></select></label>
+        <label>GUESS TIME <select id="guessSel"><option value="30">30 s</option><option value="60">60 s</option><option value="90" selected>90 s</option><option value="120">120 s</option></select></label>
+      </div>
+      <div class="join">
+        <div class="slot t1" id="slot1">TEAM 1 · 8BITDO: PRESS A BUTTON</div>
+        <div class="slot t2" id="slot2">TEAM 2 · 8BITDO: PRESS A BUTTON</div>
+      </div>
+      <button class="btn" id="startBtn" type="button">START ▶</button>
+    </section>
+
+    <!-- HIDE -->
+    <section class="screen" id="hide" hidden>
+      <p class="big">GUESSER,<br>CLOSE YOUR EYES!</p>
+      <div class="count" id="hideNum">5</div>
+      <p class="sub" id="hideSub">Team 1 actors: get ready to read your line.</p>
+    </section>
+
+    <!-- REVEAL -->
+    <section class="screen" id="reveal" hidden>
+      <p class="who" id="revWho">TEAM 1 · YOUR LINE</p>
+      <p class="stanza" id="revStanza"></p>
+      <div class="bar"><i id="revBar"></i></div>
+      <p class="sub">Plan how to act it out. No words!</p>
+    </section>
+
+    <!-- GUESS -->
+    <section class="screen" id="guess" hidden>
+      <div class="gtop">
+        <span class="who" id="gWho">TEAM 1 GUESSING</span>
+        <div class="timer"><i id="gBar"></i></div>
+        <span id="tnum">90</span>
+      </div>
+      <div class="poem" id="poem" role="listbox" aria-label="Lines of the poem"></div>
+      <div class="gbottom">
+        <div class="verdict" id="verdict" aria-live="polite">Open your eyes! Pick the line being acted.</div>
+        <button class="btn team" id="lockBtn" type="button" disabled>LOCK IN ✔</button>
+        <button class="btn" id="nextBtn" type="button" hidden>NEXT ▶</button>
+      </div>
+    </section>
+
+    <!-- FINAL -->
+    <section class="screen" id="final" hidden>
+      <h2>FINAL SCORE</h2>
+      <p id="winner"></p>
+      <p id="finalScore"></p>
+      <button class="btn" id="againBtn" type="button">PLAY AGAIN ↺</button>
+    </section>
+  </main>
+
+  <footer class="keys" aria-label="Controls">
+    <span><b>8BITDO</b>D-pad move · any face button lock in / next · Start pause</span>
+    <span><b>KEYBOARD</b>W/S or ↑/↓ move · A, Space or Enter lock in · G next · Esc pause</span>
+    <span><b>TOUCH</b>tap a line, then LOCK IN</span>
+  </footer>
+</div>
+
+<div id="pause" hidden>
+  <p class="big">PAUSED</p>
+  <button class="btn" id="resumeBtn" type="button">RESUME ▶</button>
+  <p class="sub">Esc, Start or any face button also resumes.</p>
+</div>
+
+<script>
+"use strict";
+/* Poem text: Emily Dickinson, Fr479 (c. 1862), public domain.
+   Lineation and punctuation after R. W. Franklin, ed. (Harvard UP, 1998). */
+const LINES = [
+  "Because I could not stop for Death –", "He kindly stopped for me –",
+  "The Carriage held but just Ourselves –", "And Immortality.",
+  "We slowly drove – He knew no haste", "And I had put away",
+  "My labor and my leisure too,", "For His Civility –",
+  "We passed the School, where Children strove", "At Recess – in the Ring –",
+  "We passed the Fields of Gazing Grain –", "We passed the Setting Sun –",
+  "Or rather – He passed Us –", "The Dews drew quivering and Chill –",
+  "For only Gossamer, my Gown –", "My Tippet – only Tulle –",
+  "We paused before a House that seemed", "A Swelling of the Ground –",
+  "The Roof was scarcely visible –", "The Cornice – in the Ground –",
+  "Since then – 'tis Centuries – and yet", "Feels shorter than the Day",
+  "I first surmised the Horses' Heads", "Were toward Eternity –"
+];
+const ROUNDS = 5, HIDE_SECS = 5;
+
+/* ---------------- state ---------------- */
+const $ = id => document.getElementById(id);
+let phase = 'title';           // title | hide | reveal | guess | result | final
+let G = null;                  // { turn, scores, targets }
+let sel = -1, paused = false;
+let readSecs = 10, guessSecs = 90;
+let timer = null;              // { end, total, onTick, onDone, left }
+
+function team() { return G ? G.turn % 2 : 0; }
+function show(id) {
+  for (const s of document.querySelectorAll('.screen')) s.hidden = s.id !== id;
+  $('pauseBtn').hidden = !['hide', 'reveal', 'guess'].includes(id);
+}
+function hud() {
+  $('s1').textContent = G ? G.scores[0] : 0;
+  $('s2').textContent = G ? G.scores[1] : 0;
+  const active = G && phase !== 'final';
+  $('c1').classList.toggle('on', !!active && team() === 0);
+  $('c2').classList.toggle('on', !!active && team() === 1);
+  document.body.classList.toggle('team2', !!G && team() === 1);
+  $('turnLbl').innerHTML = active
+    ? `ROUND ${Math.floor(G.turn / 2) + 1}/${ROUNDS} · <b>TEAM ${team() + 1}</b>`
+    : 'LINE CHARADES';
+}
+
+/* ---------------- timer (pausable) ---------------- */
+function startTimer(secs, onTick, onDone) {
+  timer = { end: performance.now() + secs * 1000, total: secs, onTick, onDone, left: secs };
+}
+function stopTimer() { timer = null; }
+function tick(now) {
+  if (!timer || paused) return;
+  timer.left = Math.max(0, (timer.end - now) / 1000);
+  timer.onTick && timer.onTick(timer.left, timer.total);
+  if (timer.left <= 0) { const f = timer.onDone; timer = null; f && f(); }
+}
+
+/* ---------------- game flow ---------------- */
+function shuffle(a) { a = a.slice(); for (let k = a.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [a[k], a[j]] = [a[j], a[k]]; } return a; }
+
+function newGame() {
+  readSecs = +$('readSel').value || 10;
+  guessSecs = +$('guessSel').value || 90;
+  G = { turn: 0, scores: [0, 0], targets: shuffle([...LINES.keys()]).slice(0, ROUNDS * 2) };
+  startTurn();
+}
+
+function startTurn() {
+  phase = 'hide'; sel = -1; hud(); show('hide');
+  $('hideSub').textContent = `Team ${team() + 1} actors: get ready to read your line.`;
+  chord([220, 277, 330], .25);
+  let last = null;
+  startTimer(HIDE_SECS, left => {
+    const n = Math.ceil(left);
+    $('hideNum').textContent = n;
+    if (n !== last && n > 0) { last = n; beep(440, .05, .08); }
+  }, startReveal);
+}
+
+function startReveal() {
+  phase = 'reveal'; show('reveal');
+  const t = G.targets[G.turn], s0 = Math.floor(t / 4) * 4;
+  $('revWho').textContent = `TEAM ${team() + 1} · YOUR LINE`;
+  const box = $('revStanza'); box.innerHTML = '';
+  for (let k = s0; k < s0 + 4; k++) {
+    const el = document.createElement('span');
+    el.textContent = LINES[k];
+    if (k === t) el.className = 'target'; else el.appendChild(document.createElement('br'));
+    box.appendChild(el);
+  }
+  chord([440, 554, 659], .3);
+  startTimer(readSecs, (left, total) => { $('revBar').style.width = (left / total * 100) + '%'; }, startGuess);
+}
+
+function buildPoem() {
+  const poem = $('poem'); poem.innerHTML = '';
+  for (let s = 0; s < 6; s++) {
+    const st = document.createElement('div'); st.className = 'st';
+    st.innerHTML = `<h3>STANZA ${s + 1}</h3>`;
+    for (let k = s * 4; k < s * 4 + 4; k++) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'ln'; b.textContent = LINES[k]; b.dataset.i = k;
+      b.setAttribute('role', 'option');
+      b.addEventListener('click', () => { if (phase === 'guess' && !paused) select(k); });
+      st.appendChild(b);
+    }
+    poem.appendChild(st);
+  }
+}
+const lineBtns = () => [...$('poem').querySelectorAll('.ln')];
+
+function startGuess() {
+  phase = 'guess'; show('guess'); buildPoem();
+  $('gWho').textContent = `TEAM ${team() + 1} GUESSING`;
+  $('verdict').className = 'verdict'; $('verdict').textContent = 'Open your eyes! Pick the line being acted.';
+  $('lockBtn').hidden = false; $('lockBtn').disabled = true; $('nextBtn').hidden = true;
+  $('tnum').classList.remove('low');
+  chord([523, 659, 784], .35);
+  let lastBeep = null;
+  startTimer(guessSecs, (left, total) => {
+    const n = Math.ceil(left);
+    $('tnum').textContent = n;
+    $('gBar').style.width = (left / total * 100) + '%';
+    $('tnum').classList.toggle('low', left <= 10);
+    if (left <= 10 && n !== lastBeep && n > 0) { lastBeep = n; beep(880, .06, .1); }
+  }, () => finishTurn(null));
+}
+
+function select(k) {
+  sel = Math.max(0, Math.min(LINES.length - 1, k));
+  lineBtns().forEach((b, j) => { b.classList.toggle('sel', j === sel); b.setAttribute('aria-selected', j === sel); });
+  lineBtns()[sel].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  $('lockBtn').disabled = false;
+  beep(330, .03, .06);
+}
+function moveSel(d) {
+  if (phase !== 'guess' || paused) return;
+  select(sel < 0 ? (d > 0 ? 0 : LINES.length - 1) : sel + d);
+}
+function lockIn() {
+  if (phase !== 'guess' || paused) return;
+  if (sel < 0) { select(0); return; }   // first press with nothing chosen just highlights line 1
+  finishTurn(sel);
+}
+
+function finishTurn(choice) {
+  stopTimer(); phase = 'result';
+  const t = G.targets[G.turn], ok = choice === t;
+  if (ok) G.scores[team()]++;
+  const btns = lineBtns();
+  btns.forEach(b => { b.disabled = true; b.classList.remove('sel'); });
+  btns[t].classList.add('right');
+  if (choice !== null && !ok) btns[choice].classList.add('wrong');
+  btns[t].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  const v = $('verdict');
+  v.className = 'verdict ' + (ok ? 'ok' : 'no');
+  v.textContent = ok ? '✔ CORRECT! +1' : (choice === null ? '⏱ TIME UP · +0' : '✘ NOT QUITE · +0');
+  const sm = document.createElement('small'); sm.textContent = '“' + LINES[t] + '”'; v.appendChild(sm);
+  if (ok) playFile(SND.wow, () => arpeggio([523, 659, 784, 1047])); else buzz();
+  $('lockBtn').hidden = true;
+  const last = G.turn + 1 >= ROUNDS * 2;
+  $('nextBtn').textContent = last ? 'FINAL SCORE ▶' : `TEAM ${2 - team()} NEXT ▶`;
+  $('nextBtn').hidden = false;
+  hud();
+}
+
+function next() {
+  if (phase !== 'result') return;
+  G.turn++;
+  if (G.turn >= ROUNDS * 2) finalScreen(); else startTurn();
+}
+
+function finalScreen() {
+  phase = 'final'; show('final'); hud();
+  document.body.classList.remove('team2');
+  const [a, b] = G.scores;
+  const w = $('winner');
+  if (a > b) { w.textContent = 'TEAM 1 WINS!'; w.style.color = 'var(--t1)'; }
+  else if (b > a) { w.textContent = 'TEAM 2 WINS!'; w.style.color = 'var(--t2)'; }
+  else { w.textContent = "IT'S A TIE!"; w.style.color = 'var(--gold)'; }
+  $('finalScore').innerHTML = `<span class="a">TEAM 1: ${a}</span> &nbsp;·&nbsp; <span class="b">TEAM 2: ${b}</span>`;
+  playFile(SND.win, () => arpeggio([523, 659, 784, 1047, 1319]));
+}
+
+function toTitle() { stopTimer(); G = null; phase = 'title'; hud(); show('title'); }
+
+/* ---------------- pause ---------------- */
+function setPause(on) {
+  if (!['hide', 'reveal', 'guess'].includes(phase)) on = false;
+  if (on === paused) return;
+  paused = on;
+  if (timer) {
+    if (on) timer.pausedAt = performance.now();
+    else timer.end += performance.now() - timer.pausedAt;
+  }
+  $('pause').hidden = !on;
+}
+// Quarto deck tells the iframe when its slide is hidden
+window.addEventListener('message', e => {
+  const d = e.data;
+  if (d && d.type === 'slideVisibility' && d.visible === false) setPause(true);
+});
+document.addEventListener('visibilitychange', () => { if (document.hidden) setPause(true); });
+
+/* primary "go" action: start / next / play again / resume */
+function primary() {
+  if (paused) { setPause(false); return; }
+  if (phase === 'title') newGame();
+  else if (phase === 'result') next();
+  else if (phase === 'final') toTitle();
+}
+
+/* ---------------- buttons ---------------- */
+$('startBtn').addEventListener('click', () => { unlockAudio(); newGame(); });
+$('lockBtn').addEventListener('click', lockIn);
+$('nextBtn').addEventListener('click', next);
+$('againBtn').addEventListener('click', toTitle);
+$('pauseBtn').addEventListener('click', () => setPause(true));
+$('resumeBtn').addEventListener('click', () => setPause(false));
+
+/* ---------------- keyboard ---------------- */
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.target && e.target.tagName === 'SELECT') return;
+  unlockAudio();
+  const k = e.key;
+  if (k === 'Escape') { e.preventDefault(); setPause(!paused); return; }
+  if (e.repeat && !['w', 'W', 's', 'S', 'ArrowUp', 'ArrowDown'].includes(k)) return;
+  if (phase === 'guess' && !paused) {
+    if (k === 'w' || k === 'W' || k === 'ArrowUp') { e.preventDefault(); moveSel(-1); return; }
+    if (k === 's' || k === 'S' || k === 'ArrowDown') { e.preventDefault(); moveSel(1); return; }
+    if (k === 'a' || k === 'A' || k === ' ' || k === 'Enter') { e.preventDefault(); lockIn(); return; }
+  }
+  if (k === 'g' || k === 'G' || k === 'Enter' || k === ' ') { e.preventDefault(); primary(); }
+});
+
+/* ---------------- 8BitDo / gamepads ---------------- */
+// Join on the title screen: first controller to press a button is Team 1, the next is Team 2.
+// During a turn only the acting team's controller counts (any controller, if just one is joined).
+const padTeam = {}, padMem = {};
+function joinedCount() { return Object.keys(padTeam).length; }
+function paintSlots() {
+  const has = t => Object.values(padTeam).includes(t);
+  $('slot1').classList.toggle('joined', has(0)); $('slot2').classList.toggle('joined', has(1));
+  $('slot1').textContent = has(0) ? 'TEAM 1 · CONTROLLER READY ✔' : 'TEAM 1 · 8BITDO: PRESS A BUTTON';
+  $('slot2').textContent = has(1) ? 'TEAM 2 · CONTROLLER READY ✔' : 'TEAM 2 · 8BITDO: PRESS A BUTTON';
+}
+function join(i) {
+  const used = Object.values(padTeam);
+  const t = [0, 1].find(x => !used.includes(x));
+  if (t === undefined) return false;
+  padTeam[i] = t; paintSlots(); beep(t ? 660 : 523, .08, .12); return true;
+}
+addEventListener('gamepaddisconnected', e => { delete padTeam[e.gamepad.index]; paintSlots(); });
+
+function pollPads(now) {
+  const pads = navigator.getGamepads ? [...navigator.getGamepads()].filter(Boolean) : [];
+  for (const gp of pads) {
+    const b = j => !!(gp.buttons[j] && (gp.buttons[j].pressed || gp.buttons[j].value > 0.5));
+    const ax = j => gp.axes[j] || 0;
+    const st = {
+      up: b(12) || b(4) || b(6) || ax(1) < -0.5,
+      down: b(13) || b(5) || b(7) || ax(1) > 0.5,
+      left: b(14) || ax(0) < -0.5, right: b(15) || ax(0) > 0.5,
+      face: b(0) || b(1) || b(2) || b(3),
+      start: b(9) || b(8)
+    };
+    const m = padMem[gp.index] || (padMem[gp.index] = { next: {} });
+    const edge = name => st[name] && !m[name];
+    const held = (name, fn) => {   // press, then auto-repeat while held
+      if (edge(name)) { fn(); m.next[name] = now + 350; }
+      else if (st[name] && now >= (m.next[name] || 0)) { fn(); m.next[name] = now + 140; }
+    };
+    const joined = gp.index in padTeam;
+    const mine = joined && (joinedCount() < 2 || padTeam[gp.index] === team());
+
+    if (phase === 'title' && !joined && (edge('face') || edge('start'))) { unlockAudio(); join(gp.index); }
+    else if (edge('start')) { unlockAudio(); if (['hide', 'reveal', 'guess'].includes(phase) && !paused) setPause(true); else primary(); }
+    else if (paused && edge('face')) setPause(false);
+    else if (phase === 'guess' && (mine || !joined)) {
+      held('up', () => moveSel(-1)); held('down', () => moveSel(1));
+      held('left', () => moveSel(-4)); held('right', () => moveSel(4));
+      if (edge('face')) lockIn();
+    }
+    else if (edge('face')) { unlockAudio(); primary(); }
+    for (const k in st) m[k] = st[k];
+  }
+}
+
+/* ---------------- sound ---------------- */
+// Shared site sounds (original to this project). Browsers block audio until the first tap/key.
+const SND = { wow: new Audio('../../assets/audio/wow.mp3'), win: new Audio('../../assets/audio/win.mp3') };
+for (const a of Object.values(SND)) { a.preload = 'auto'; a.volume = .9; }
+let AC = null;
+function unlockAudio() {
+  try { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch (e) {}
+}
+function playFile(a, fallback) {
+  try { a.currentTime = 0; const p = a.play(); if (p && p.catch) p.catch(() => fallback && fallback()); }
+  catch (e) { fallback && fallback(); }
+}
+function beep(f, dur, vol) {
+  if (!AC || AC.state !== 'running') return;
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = 'square'; o.frequency.value = f;
+  g.gain.setValueAtTime(vol || .15, AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(.0001, AC.currentTime + dur);
+  o.connect(g).connect(AC.destination); o.start(); o.stop(AC.currentTime + dur);
+}
+function chord(fs, d) { fs.forEach(f => beep(f, d, .08)); }
+function arpeggio(fs) { fs.forEach((f, k) => setTimeout(() => beep(f, .18, .14), k * 90)); }
+function buzz() {
+  if (!AC || AC.state !== 'running') return;
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = 'sawtooth'; o.frequency.setValueAtTime(160, AC.currentTime);
+  o.frequency.exponentialRampToValueAtTime(70, AC.currentTime + .4);
+  g.gain.setValueAtTime(.2, AC.currentTime); g.gain.exponentialRampToValueAtTime(.0001, AC.currentTime + .45);
+  o.connect(g).connect(AC.destination); o.start(); o.stop(AC.currentTime + .5);
+}
+addEventListener('pointerdown', unlockAudio);
+
+/* ---------------- main loop ---------------- */
+function loop(now) { tick(now); pollPads(now); requestAnimationFrame(loop); }
+hud(); paintSlots(); requestAnimationFrame(loop);
+</script>
+</body>
+</html>
