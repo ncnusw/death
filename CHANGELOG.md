@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-21
+- **In Their Footsteps** is now locked until a code is shown in class. The published page holds only a lock screen and an encrypted copy of the game (AES-256-GCM, key derived from the code with PBKDF2-SHA256, 600,000 rounds), so neither the game nor the code can be read from the source. Codes ignore case, spaces and dashes; a device that has unlocked remembers the code until the code changes. The unencrypted game and the locking script live in `_private/`, which is excluded from git.
+
+## 2026-10-20
+- Added **In Their Footsteps** (`games/footsteps/`) for Week 7, *Companioning the Bereaved*. One player is the mourner and wanders anywhere for 15 seconds. The path glows, then fades, and the companion retraces it from memory. Scoring rewards the same route, in the same order, at the same pace (pauses count), and the result appears as a full-screen percentage: green 90%+, yellow 80–89%, red below 80%. Afterwards, both paths are shown together for discussion. Four rounds in four original, hand-drawn-in-code places (beach, forest, sunset meadow, snowfield at night): two **easy** rounds (path glows 10 s, with pauses, direction and end marked), then two **hard** rounds (5 s, no markers). Roles swap every round (P1 → P2, P2 → P1). **Solo** mode: a computer mourner walks, and you retrace it. 8BitDo join screen (D-pad, stick or hat), shared keyboard (WASD or arrows), touch (drag a finger to walk). Pauses when the slide is hidden. Three discussion questions at the end. Uses the site's own sounds: `wow.mp3` for a 90%+ retrace, `win.mp3` at the end.
+
 ## 2026-10-14
 - **The Swing:** tapping the touch buttons quickly no longer zooms the page in on phones (double-tap and pinch zoom are now blocked). If a browser zooms in anyway, a hint appears and a two-finger pinch zooms back out.
 - Launch page: updated the AI disclaimer in the footer to note that, despite review, AI-assisted content may contain errors, and to ask readers to check important information against course readings or other reliable sources.

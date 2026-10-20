@@ -1,3 +1,6 @@
 # Never publish credentials or the push tools, even if they land in this folder by mistake
 *token*.txt
 push-death.*
+
+# Unencrypted source of locked games: keep on this computer only
+_private/
