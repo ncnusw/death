@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-21
+- **In Their Footsteps:** phones and tablets now walk with a thumbstick in the bottom-left corner (a thumb anywhere on the left half grabs it), so your finger no longer covers the character or the path. The playing field now stretches to fill wide phone screens instead of leaving black bars at the sides. New full-screen button in the top bar; on phones and tablets, pressing START also goes full screen and turns the screen sideways where the browser allows (Chrome on Android; not on iPhone). Slimmer top bar on short screens. Same class code.
 - **In Their Footsteps** is now locked until a code is shown in class. The published page holds only a lock screen and an encrypted copy of the game (AES-256-GCM, key derived from the code with PBKDF2-SHA256, 600,000 rounds), so neither the game nor the code can be read from the source. Codes ignore case, spaces and dashes; a device that has unlocked remembers the code until the code changes. The unencrypted game and the locking script live in `_private/`, which is excluded from git.
 
 ## 2026-10-20
