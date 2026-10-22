@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-22
+- **In Their Footsteps:** reference corrected to Wolfelt (2009), *The Handbook for Companioning the Mourner* (Companion Press), and the tenet names now match the book's chapter titles: Tenet 2, Going to the wilderness of the soul; Tenet 6, Walking alongside; Tenet 7, Discovering the gifts of sacred silence; Tenet 10, Learning from others. The short lines under each tenet remain paraphrases.
+
 ## 2026-10-21
 - **In Their Footsteps:** each round now teaches one companioning tenet (Wolfelt, 2006, paraphrased from the Week 7 slides), matched to what the round asks players to do: Beach = Tenet 6, Walk Alongside; Forest = Tenet 2, Entering the Wilderness; Meadow = Tenet 7, Sacred Silence; Snowfield = Tenet 10, Learn from the Mourner. The tenet appears on the round's intro card, and after the round a reflection question for the same tenet appears above the path comparison.
 - **In Their Footsteps:** the end screen now shows one very large average (team average for 2 players, your average for solo) on a full-screen green / yellow / red background, with the four round scores (easy, easy, hard, hard) along the bottom. The discussion questions were removed from the game.
