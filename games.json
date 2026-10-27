@@ -64,5 +64,16 @@
     "thumb": "games/footsteps/thumb.png",
     "accent": "neutral",
     "added": "2026-10-20"
+  },
+  {
+    "slug": "palliative-shift",
+    "title": "Palliative Shift",
+    "description": "You’re the social worker on a palliative care ward: flag what each patient needs, watch which medicine drawers the nurse opens, and answer families’ worries accurately without overstepping your role. Chinese and English throughout. Unlocks with a code shown in class.",
+    "players": "1 player, on your own phone (landscape)",
+    "concept": "Palliative care knowledge for social workers, based on the Palliative Care Knowledge Test (Nakazawa et al., 2009)",
+    "path": "games/palliative-shift/",
+    "thumb": "games/palliative-shift/thumb.png",
+    "accent": "neutral",
+    "added": "2026-10-27"
   }
 ]
