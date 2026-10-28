@@ -1,0 +1,10 @@
+Art by Kenney (www.kenney.nl)
+
+Packs used, all under Creative Commons Zero (CC0 1.0, public domain):
+  - Roguelike Indoors          -> indoor.png (sprite sheet, unchanged)
+  - Roguelike Characters 2.0   -> chars.png  (sprite sheet, unchanged)
+  - Input Prompts 1.5          -> keyboard_*.png, switch_*.png, touch_*.png (unchanged)
+
+http://creativecommons.org/publicdomain/zero/1.0/
+Free to use in personal, educational and commercial projects. Crediting Kenney is
+appreciated but not required.
