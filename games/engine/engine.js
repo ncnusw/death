@@ -19,7 +19,7 @@
  *   @set var value   @inc var   @if var=value label   @if var>=n label
  *   @goto label   @note termId   @item text   @quiz id   @pause id   @title Big|small   @wait ms
  *   @choice  followed by  ? option text [-> label]   lines     (sets var "choice" to 1, 2, 3...)
- *   @music quiet|warm|bright|tick|danger|stop   @save   @end
+ *   @music quiet|warm|bright|tick|danger|dread|stop   @save   @end
  *   @follow id | @follow off   that person walks one step behind the player (and comes along through doors)
  *   @light r | @light off       darkness everywhere except a lantern circle of r tiles around the player
  *   @timer seconds label | @timer off   countdown clock; runs label when it reaches 0 (paused during dialogue and quizzes)
@@ -721,6 +721,7 @@
       musicT = setInterval(() => { if (!muted) note(1600, AC.currentTime, .03, .02, 'square'); }, 1000); return;
     }
     if (mood === 'danger') { danger(); return; }
+    if (mood === 'dread') { dread(); return; }
     const m = MOODS[mood]; if (!m) return;
     let beat = 0; const spb = 60 / m.bpm;
     const play = () => {
@@ -733,6 +734,42 @@
     };
     play(); musicT = setInterval(play, spb * 1000);
   }
+  // DREAD-START
+  // 'dread': slow and tense, for creeping through the dark. A low drone a semitone apart (it "beats"), a heartbeat,
+  // a creeping chromatic music-box figure, a high thin whine, and distant wind. 4-second bars, 16 steps each.
+  function pad(c, out, freq, at, dur, vol, type) {   // a slow swell
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type || 'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(.0001, at); g.gain.linearRampToValueAtTime(vol, at + dur * .35); g.gain.exponentialRampToValueAtTime(.0005, at + dur);
+    o.connect(g); g.connect(out); o.start(at); o.stop(at + dur + .05);
+  }
+  function dreadStep(c, out, step, t, voice) {
+    const s16 = .25, i = step % 16, bar = Math.floor(step / 16) % 4;
+    const ROOTS = [45, 45, 41, 40];                       // A, A, F, E (low)
+    const root = ROOTS[bar];
+    if (i === 0) {                                        // drone: root and the note a semitone above, slowly swelling
+      pad(c, out, mf(root - 12), t, 4.6, .07, 'triangle');
+      pad(c, out, mf(root - 11), t, 4.6, .045, 'triangle');
+      pad(c, out, mf(root), t + .2, 4.2, .02, 'sawtooth');
+    }
+    if (i % 4 === 0) voice.thump(t, .15);                 // heartbeat: lub...
+    if (i % 4 === 1) voice.thump(t, .08);                 // ...dub
+    if (bar % 2 === 1 && i >= 6 && i % 2 === 0 && i <= 12) {   // music box creeping down by semitones
+      const MB = bar === 1 ? [76, 75, 72, 71] : [77, 76, 73, 72];
+      voice.note(mf(MB[(i - 6) / 2]), t, 1.1, .022, 'triangle');
+      voice.note(mf(MB[(i - 6) / 2] + 12), t, .5, .006, 'sine');
+    }
+    if (bar === 2 && i === 4) { pad(c, out, mf(88), t, 3.4, .007, 'sine'); pad(c, out, mf(89), t + .4, 3, .006, 'sine'); }   // thin whine (minor 2nd)
+    if (bar % 2 === 0 && i === 8) voice.hiss(t, 3.6, .06, false);   // wind / distant rumble
+    if (bar === 3 && i === 14) voice.note(mf(root + 6), t, 1.6, .02, 'square');   // tritone sting before it loops
+  }
+  function dread() {
+    let step = 0;
+    const voice = { thump, hiss, note };
+    const play = () => { if (!muted) dreadStep(AC, master, step, AC.currentTime + .05, voice); step++; };
+    play(); musicT = setInterval(play, 250);
+  }
+  // DREAD-END
   // 'danger': a fast minor-key chase (A minor, harmonic-minor E chord for tension), played in 16th notes
   let noiseBuf = null;
   function thump(at, vol) {          // low drum: a sine that drops in pitch

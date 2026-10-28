@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-29
+- **Light in the Stacks:** prolonged grief disorder is now called **延續性哀傷** throughout (Part 2 title card, the counselor's introduction, quiz 3, PGDT, and one of Zhe's conversation choices), instead of 延續性哀傷障礙症.
+- **Light in the Stacks:** removed the remaining week references (the opening title card, the title screen and the credits line), so the game fits any week of the course.
+- **Light in the Stacks:** new tense, scary music for basement floors B1 and B2, before the B3 countdown: a low drone with a dissonant semitone, a heartbeat, a creeping chromatic music-box figure, a thin high whine and distant wind. B3 keeps the fast chase music. The music is original and generated in the browser (`@music dread` in `games/engine/engine.js`); no audio files.
+- Re-encrypted with the same class password, so devices that already unlocked it don't need to unlock again.
+
 ## 2026-10-28
 - **Light in the Stacks**, **Palliative Shift** and **Bereavement Shift** now share one class password (kept in the teacher's own password list, not in this repo; it ignores case, spaces and dashes). Devices that unlocked with the old codes are asked for the new one.
 - **Light in the Stacks** is now encrypted like the other two (AES-256-GCM, key from the password via PBKDF2-SHA256, 600,000 rounds), replacing the old plain-text `STACKS` gate. The story data (`data.js`) is now inside the encrypted page, so the story, quizzes and the discussion password can no longer be read from the published files. The editable source and build tools moved to `_private/stacks/` (not published); `games/stacks/data.js` and `games/stacks/tools/` were removed from the site.
