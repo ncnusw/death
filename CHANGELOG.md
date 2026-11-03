@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-03
+- **Light in the Stacks** no longer needs a password. The class lock screen is gone, so the game opens straight away and is published unencrypted (`games/stacks/index.html` + `games/stacks/data.js`); Palliative Shift, Bereavement Shift and In Their Footsteps keep the class password.
+- **Light in the Stacks:** the discussion pause after the counselor no longer asks for a password; it shows the discussion question with a Continue button. The "new device" password on the title screen was removed too.
+- The editable source and build tools stay in `_private/stacks/` (run `tools/build_data.py`, then copy `index.html` and `data.js` into `games/stacks/`). Removed the leftover `games/stacks/tools/` stubs.
+
 ## 2026-10-29
 - **Light in the Stacks:** prolonged grief disorder is now called **延續性哀傷** throughout (Part 2 title card, the counselor's introduction, quiz 3, PGDT, and one of Zhe's conversation choices), instead of 延續性哀傷障礙症.
 - **Light in the Stacks:** removed the remaining week references (the opening title card, the title screen and the credits line), so the game fits any week of the course.
