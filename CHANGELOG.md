@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-05
+- Added **Tug of Understanding** (`games/tug/`), a two-player game on one phone laid flat between the players (the top half is turned upside down for the far player). A card appears on both halves; the first correct tap wins a **pull**, and for 3 seconds the winner taps their half to drag the rope, and the border between the two halves, toward them while the other player taps to resist at reduced strength. A wrong tap locks that player out for the card. Drag the rope all the way, or be ahead after 12 cards, to win. Three decks plus a mixed deck: **Which is it?** (typical grief, prolonged grief, depression or PTSD), **How old?** (0–5, 6–11, 12–18) and **True or myth?** Each card ends with a one-line explanation; the end screen lists the cards nobody got and three discussion questions. Touch, keyboard (bottom 1–4 + Space, top 7–0 + Enter, Esc pause) and gamepads (pad 1 bottom, pad 2 top). Pauses on `slideVisibility` and when the tab is hidden. Plays `wow.mp3` on a correct answer and `win.mp3` at the end. Encrypted with a new class password (kept in the teacher's password list); source in `_private/tug.html`.
+
 ## 2026-11-03
 - **Light in the Stacks** no longer needs a password. The class lock screen is gone, so the game opens straight away and is published unencrypted (`games/stacks/index.html` + `games/stacks/data.js`); Palliative Shift, Bereavement Shift and In Their Footsteps keep the class password.
 - **Light in the Stacks:** the discussion pause after the counselor no longer asks for a password; it shows the discussion question with a Continue button. The "new device" password on the title screen was removed too.
