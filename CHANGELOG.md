@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-12 (time attack)
+- **Before You Melt**: after the six stages comes a **Time Attack**: 10 frost gifts and ice crystals appear one at a time, each with a 4.5-second timer ring and one shot only (gift 100, crystal 150, plus up to 100 for speed). Then a full-screen score (answers +100, wrong −25, items +50 during the stages, plus Time Attack points; a melted stage resets that stage's points) with a rank title and a breakdown so students can compare, and buttons for the five-snowmen activity or playing again.
+
 ## 2026-11-12 (fullscreen)
 - **Before You Melt**: launch-page title now English only. The game switches to full screen on the first tap or key press (and locks to landscape on Android where allowed); skipped when embedded in a slide and on iPhone, which does not support it.
 
