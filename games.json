@@ -99,14 +99,14 @@
     "added": "2026-10-28"
   },
   {
-    "slug": "tug",
-    "title": "Tug of Understanding",
-    "description": "Two players, one phone laid flat between you. Answer first and right to win a pull, then tap like mad to drag the rope, and the screen, toward your side. Decks: Which is it? (typical grief, prolonged grief, depression or PTSD), How old? and True or myth? Unlocks with a code shown in class.",
-    "players": "2 players, one phone",
-    "concept": "Prolonged grief vs. typical grief, depression and PTSD (DSM-5-TR); how children grieve at different ages",
-    "path": "games/tug/",
-    "thumb": "games/tug/thumb.png",
+    "slug": "melt",
+    "title": "Before You Melt 融化之前",
+    "description": "You are a snowman. Throw snowballs at the right answers to travel through six stages of life before the sun melts you, then meet five snowmen, each with a grief case from a different age (bilingual). The case view is large enough for the projector. Unlocks with a code shown in class.",
+    "players": "1 player on a phone, or the projector",
+    "concept": "Death and loss across the life span: how grief differs from early childhood to old age",
+    "path": "games/melt/",
+    "thumb": "games/melt/thumb.png",
     "accent": "neutral",
-    "added": "2026-11-05"
+    "added": "2026-11-12"
   }
 ]

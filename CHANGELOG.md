@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-12 (later)
+- Removed **Tug of Understanding** (`games/tug/`) from the site; its prolonged-grief decks no longer matched the course plan.
+
+## 2026-11-12
+- Added **Before You Melt 融化之前** (`games/melt/`), a bilingual (English/中文) single-player game. You are a snowman: a question appears and three answers drift across the field; throw a snowball at the right one. Six stages (across the life span, ages 0–5, 6–11, 12–18, adults, 65+), three questions each. A melt meter drains faster each stage; a right answer refreezes you, a wrong one melts you faster, and melting simply restarts the stage. The ending shows five snowmen, one per group, each opening a large bilingual case summary (written for class, with page numbers in McCoyd & Walter, 2016) plus head/heart/feet prompts, built for the projector; the title screen can jump straight there. Touch, keyboard (←/→ or A/D aim, Space or 1–3 throw, Esc pause) and gamepad (aim with D-pad/stick/shoulders, any face button throws, Start pauses). Pauses on `slideVisibility` and when the tab is hidden. Plays `wow.mp3` per stage cleared and `win.mp3` at the end. Encrypted with a new class password; source in `_private/melt.html`.
+
 ## 2026-11-05
 - Added **Tug of Understanding** (`games/tug/`), a two-player game on one phone laid flat between the players (the top half is turned upside down for the far player). A card appears on both halves; the first correct tap wins a **pull**, and for 3 seconds the winner taps their half to drag the rope, and the border between the two halves, toward them while the other player taps to resist at reduced strength. A wrong tap locks that player out for the card. Drag the rope all the way, or be ahead after 12 cards, to win. Three decks plus a mixed deck: **Which is it?** (typical grief, prolonged grief, depression or PTSD), **How old?** (0–5, 6–11, 12–18) and **True or myth?** Each card ends with a one-line explanation; the end screen lists the cards nobody got and three discussion questions. Touch, keyboard (bottom 1–4 + Space, top 7–0 + Enter, Esc pause) and gamepads (pad 1 bottom, pad 2 top). Pauses on `slideVisibility` and when the tab is hidden. Plays `wow.mp3` on a correct answer and `win.mp3` at the end. Encrypted with a new class password (kept in the teacher's password list); source in `_private/tug.html`.
 

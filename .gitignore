@@ -4,3 +4,6 @@ push-death.*
 
 # Unencrypted source of locked games: keep on this computer only
 _private/
+
+# Files the Claude app saves into this folder (slide zips etc.): not for the website
+Claude outputs/
