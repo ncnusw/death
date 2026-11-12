@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-12 (fullscreen)
+- **Before You Melt**: launch-page title now English only. The game switches to full screen on the first tap or key press (and locks to landscape on Android where allowed); skipped when embedded in a slide and on iPhone, which does not support it.
+
+## 2026-11-12 (update)
+- **Before You Melt**: rebuilt the throwing as a Worms-style artillery mechanic. Drag away from the snowman to set angle and power (or ↑/↓ plus hold Space; gamepad: up/down plus hold a face button); the snowball arcs under gravity and a wind that strengthens each stage, with only a short aiming preview. Harder melting (3.2% to 6.2% per second by stage), so players need to hit 🎁 frost gifts (melting slows to 30% for 12 s) and ❄️ ice crystals (+30%). Same six stages, questions and five-snowmen case ending.
+
 ## 2026-11-12 (later)
 - Removed **Tug of Understanding** (`games/tug/`) from the site; its prolonged-grief decks no longer matched the course plan.
 
