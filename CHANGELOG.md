@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-18
+- Added **Escape the Jail of Assumptions** (`games/jail/`), a whole-class escape room for cross-cultural bereavement, played on the classroom whiteboard with one wireless keyboard (on-screen keypad for touch; 8BitDo: D-pad walks, Select opens the keypad, any face button presses a key, Start pauses). A tiny-dungeon jail (Kenney Tiny Dungeon, CC0) with eight cells: marigold, lantern river, florist, seventh-night vigil, magpie, Poe's chamber door, the 49-day mourning calendar and a final door whose letters are split across all six tables. Clues are split between the screen and printed evidence cards A–F (kept in the teacher folder, not on the site). Each cell is encrypted with the answer to the cell before it, so the page holds no answers; the whole page is also locked with a class code. Progress and the timer are saved on the device, so a reload continues where the class left off. Each opened door shows a one-line lesson; the ending lists all eight lessons and three discussion questions. Pauses on `slideVisibility`. Plays `wow.mp3` per door and `win.mp3` at the escape. Source in `_private/jail/` (edit `levels.js`, then `node build.js`).
+
 ## 2026-11-12 (time attack)
 - **Before You Melt**: after the six stages comes a **Time Attack**: 10 frost gifts and ice crystals appear one at a time, each with a 4.5-second timer ring and one shot only (gift 100, crystal 150, plus up to 100 for speed). Then a full-screen score (answers +100, wrong −25, items +50 during the stages, plus Time Attack points; a melted stage resets that stage's points) with a rank title and a breakdown so students can compare, and buttons for the five-snowmen activity or playing again.
 

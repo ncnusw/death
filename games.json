@@ -108,5 +108,16 @@
     "thumb": "games/melt/thumb.png",
     "accent": "neutral",
     "added": "2026-11-12"
+  },
+  {
+    "slug": "jail",
+    "title": "Escape the Jail of Assumptions",
+    "description": "A whole-class escape room on one screen. You assumed everyone grieves the way you do, so you are locked in a tiny dungeon. Eight cells, each opened by learning what another culture already knows; the evidence is on paper cards at the six tables, and the last door needs all of them. Type answers on one wireless keyboard, or use the big on-screen keypad. Unlocks with a code shown in class.",
+    "players": "Whole class, one screen (6 tables + 1 keyboard)",
+    "concept": "Cross-cultural bereavement and cultural humility: ask, don't assume",
+    "path": "games/jail/",
+    "thumb": "games/jail/thumb.png",
+    "accent": "neutral",
+    "added": "2026-11-18"
   }
 ]
