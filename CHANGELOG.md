@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-19 (free tiles)
+- **Escape the Jail**, cell 5: three tiles of the floor picture never lock and give no "right" sound; the picture only counts as finished when the class has set them correctly too. New grid option `free`.
+
 ## 2026-11-19 (top row)
 - **Escape the Jail**, cell 4: the player can now walk on the top floor row (except under the cell bars) to push pieces downwards; pieces themselves still cannot be pushed into that row. New scene option `walkTop`.
 
