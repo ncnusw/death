@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-19 (thumbnail)
+- **Escape the Jail**: new generic launch-page thumbnail (an empty cell with a padlock) in place of a screenshot that showed a cell and its clues. The launch-page description no longer names any room's contents, and the launch page's built-in fallback copy no longer mentions the old paper cards and keypad.
+
 ## 2026-11-19 (night)
 - **Escape the Jail**, all eight cells are now solved from the room alone: the printed evidence cards (tables A–F) and the on-screen clue cards are gone. The cell-door pop-up is a single text field in every cell: no question, no hint button, no letter count. Title-screen story and the first ending question no longer mention tables.
 - **Cell 5 (MAGPIE)** rebuilt: the whole floor is a colour grid. Stand on a tile and press Enter to turn it blue → white → black; a tile locks when it reaches its right colour, and the finished floor shows a black-and-white bird with a long tail against a blue sky. Four bird guides on shelves along the top wall list 16 birds with Chinese and English names and one feature each (look-alikes include crow, myna, drongo, swallow, penguin and the Taiwan Blue Magpie); a postcard from an English grandmother keeps the "two meanings" lesson. Accepts MAGPIE(S).
