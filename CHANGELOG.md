@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-19 (music)
+- **Escape the Jail**: tense background music through the whole game, composed in code and synthesised live in the browser (no audio file, no third-party music): a low drone, a heartbeat, a ticking clock, a minor-key bass line and an uneasy high swell every few bars. It gets a little faster each cell; from cell 5 the heartbeat doubles and from cell 7 the clock ticks faster. Music dips briefly under the success sound, pauses with the game (Esc, hidden slide or tab) and fades out at the escape before the victory sound. **M** or the **♪ MUSIC** button (top bar) turns it off and on; the choice is remembered on that computer.
+
 ## 2026-11-19 (thumbnail)
 - **Escape the Jail**: new generic launch-page thumbnail (an empty cell with a padlock) in place of a screenshot that showed a cell and its clues. The launch-page description no longer names any room's contents, and the launch page's built-in fallback copy no longer mentions the old paper cards and keypad.
 
