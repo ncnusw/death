@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-19 (top row)
+- **Escape the Jail**, cell 4: the player can now walk on the top floor row (except under the cell bars) to push pieces downwards; pieces themselves still cannot be pushed into that row. New scene option `walkTop`.
+
 ## 2026-11-19 (music)
 - **Escape the Jail**: tense background music through the whole game, composed in code and synthesised live in the browser (no audio file, no third-party music). It gets a little more intense in later cells, dips under the success sound, pauses with the game and fades out at the escape. **M** or the **♪ MUSIC** button (top bar) turns it off and on; the choice is remembered on that computer.
 
