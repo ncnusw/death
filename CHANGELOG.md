@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-20 (music per cell)
+- **Escape the Jail**: each of the eight cells now has its own music track (still composed in code and synthesised in the browser; no audio files). Tracks 1–7 rise in tempo (76 → 116 BPM), density and suspense, each in its own key; the final cell switches to a bright, major-key "finish line" groove. A new cell's track starts at the next bar; the drone glides to the new key.
+
 ## 2026-11-19 (free tiles)
 - **Escape the Jail**, cell 5: three tiles of the floor picture never lock and give no "right" sound; the picture only counts as finished when the class has set them correctly too. New grid option `free`.
 
