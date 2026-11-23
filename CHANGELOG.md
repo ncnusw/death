@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 (class code)
+- **Escape the Jail**: the page now opens with a new, much longer class code (the old one no longer works). The code is kept on the teacher's computer only.
+
 ## 2026-11-20 (music per cell)
 - **Escape the Jail**: each of the eight cells now has its own music track (still composed in code and synthesised in the browser; no audio files). Tracks 1–7 rise in tempo (76 → 116 BPM), density and suspense, each in its own key; the final cell switches to a bright, major-key "finish line" groove. A new cell's track starts at the next bar; the drone glides to the new key.
 
