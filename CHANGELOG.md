@@ -5,6 +5,7 @@
 - **Seven Doors** is locked with a class code (AES-256-GCM, same lock as the other games); the unencrypted source is in `_private/seven-doors.html` and stays on the teacher's computer.
 - **Seven Doors**, phones and tablets: same touch controls as Light in the Stacks (hold and slide on the left half to walk, faint A button bottom right, a one-time hint, and a "turn your phone sideways" screen in portrait). The A button also works on the house pages.
 - **Seven Doors**: the town now fills wide screens edge to edge (extra countryside on the sides), and phones and tablets go full screen and sideways on the first tap.
+- **Seven Doors**: each group now plays on its own. After a home, the game says "go to the next home" (or "go to the hospital" once all seven are visited) instead of asking to pass the controller. The hospital questions are now multiple choice: choose an answer (tap, D-pad/arrows or 1–4), press Check answer, see right/wrong with the explanation, and the end screen shows how many were right (x/10). The discussion timer and self-scoring instructions are gone.
 
 ## 2026-11-23 (class code)
 - **Escape the Jail**: the page now opens with a new, much longer class code (the old one no longer works). The code is kept on the teacher's computer only.

@@ -12,7 +12,7 @@ Whole-class escape room on cross-cultural bereavement and cultural humility. One
 - To change puzzles: edit `_private/jail/levels.js`, then run `node build.js` inside `_private/jail/` (needs Node).
 
 ## Seven Doors 七扇門 (`games/seven-doors/`)
-Whole-class game on religious views of death and mourning. Groups pass one controller around to visit seven homes in a tiny town, then answer ten supervisor questions on the big screen (groups keep their own scores). Chinese/English toggle (L key or the 中 / EN button). Each faith is described in words only. Unlocks with a code shown in class.
+Group game on religious views of death and mourning. Each group visits seven homes in a tiny town, then answers ten multiple-choice questions from a hospital supervisor; the game shows how many they got right. Chinese/English toggle (L key or the 中 / EN button). Each faith is described in words only. Unlocks with a code shown in class.
 - To edit: change `_private/seven-doors.html`, then from `_private/` run `node lock.js seven-doors.html ../games/seven-doors/index.html <CODE> seven-doors "Seven Doors" '<span class="a">SEVEN</span> <span class="b">DOORS</span>'`.
 
 - Controls: 8BitDo (D-pad walk, any face button next, Start/Select pause) · keyboard (arrows/WASD, Space/Enter, L language, Esc pause) · touch (on-screen D-pad and A).
